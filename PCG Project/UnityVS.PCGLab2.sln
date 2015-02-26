@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.PCGLab2.CSharp", "UnityVS.PCGLab2.CSharp.csproj", "{1430818B-C180-E5DF-E4E8-9B06CAAC003B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.PCGLab2.CSharp.Plugins", "UnityVS.PCGLab2.CSharp.Plugins.csproj", "{7CF8C248-9EAD-ED71-7DC4-4C58F3E6ABEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1430818B-C180-E5DF-E4E8-9B06CAAC003B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1430818B-C180-E5DF-E4E8-9B06CAAC003B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1430818B-C180-E5DF-E4E8-9B06CAAC003B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1430818B-C180-E5DF-E4E8-9B06CAAC003B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF8C248-9EAD-ED71-7DC4-4C58F3E6ABEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF8C248-9EAD-ED71-7DC4-4C58F3E6ABEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF8C248-9EAD-ED71-7DC4-4C58F3E6ABEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF8C248-9EAD-ED71-7DC4-4C58F3E6ABEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

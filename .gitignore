@@ -1,0 +1,37 @@
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Library/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+*/BetterEditorPrefs.asset
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll
+Assets/Plugins/Editor/Vexe/ScriptableAssets/BetterEditorPrefs.asset
+Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll
+*/UnityVS/*
+*/UnityVS
+*.dll
