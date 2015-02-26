@@ -7,14 +7,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{70C3F284-A948-FE5E-24A2-4572187AA339}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +54,18 @@
     <Reference Include="C5">
       <HintPath>Assets\C5.dll</HintPath>
     </Reference>
+    <Reference Include="Fasterflect">
+      <HintPath>Assets\Plugins\Vexe\DLLs\Fasterflect\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="FullSerializer">
+      <HintPath>Assets\Plugins\Vexe\DLLs\FullSerializer\FullSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="RuntimeExtensions">
+      <HintPath>Assets\Plugins\Vexe\DLLs\Runtime\RuntimeExtensions\RuntimeExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="RuntimeHelpers">
+      <HintPath>Assets\Plugins\Vexe\DLLs\Runtime\RuntimeHelpers\RuntimeHelpers.dll</HintPath>
+    </Reference>
     <Reference Include="TilingInterfaces">
       <HintPath>Assets\TilingInterfaces.dll</HintPath>
     </Reference>
@@ -69,12 +83,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\TruchetTile\TruchetTile.cs" />
-    <Compile Include="Assets\Scripts\TruchetTile\TruchetTileSet.cs" />
-    <Compile Include="Assets\Scripts\TruchetTile\TruchetTileSetBuilder.cs" />
-    <Compile Include="Assets\Scripts\TruchetTile\TruchetTiling.cs" />
-    <Compile Include="Assets\Scripts\TruchetTile\TruchetTilingBuilder.cs" />
-    <Compile Include="Assets\Scripts\TruchetTilingScene.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\PriorityTile.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\Tile.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\TileSet.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\TileSetBuilder.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\Tiling.cs" />
+    <Compile Include="Assets\Scripts\Tile Framework\TilingBuilder.cs" />
+    <Compile Include="Assets\Scripts\TilingScene.cs" />
+    <None Include="Assets\Plugins\Editor\Vexe\DLLs\EditorExtensions\EditorExtensions.XML" />
+    <None Include="Assets\Plugins\Editor\Vexe\DLLs\EditorHelpers\EditorHelpers.XML" />
+    <None Include="Assets\Plugins\Editor\Vexe\LICENSE.txt" />
+    <None Include="Assets\Plugins\Vexe\DLLs\Fasterflect\Fasterflect.XML" />
+    <None Include="Assets\Plugins\Vexe\DLLs\FullSerializer\FullSerializer.XML" />
+    <None Include="Assets\Plugins\Vexe\DLLs\Runtime\RuntimeExtensions\RuntimeExtensions.XML" />
+    <None Include="Assets\Plugins\Vexe\DLLs\Runtime\RuntimeHelpers\RuntimeHelpers.XML" />
+    <None Include="Assets\Plugins\Vexe\HISTORY.txt" />
+    <None Include="Assets\Plugins\Vexe\LICENSE.txt" />
+    <None Include="Assets\Plugins\Vexe\Runtime\SaveSystem\doc.txt" />
     <None Include="Assets\Resources\Materials\CurveShader.shader" />
     <None Include="Assets\Resources\Materials\DebugShader.shader" />
     <None Include="Assets\Resources\Materials\PerlinNoiseTile.shader" />

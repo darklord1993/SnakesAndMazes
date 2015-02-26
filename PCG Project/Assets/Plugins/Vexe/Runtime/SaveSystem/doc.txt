@@ -1,0 +1,41 @@
+
+BetterSave:
+- Saves/Loads components, objects etc to a stream (file, network, etc)
+- there's two approaches we could roll with:
+	1- each scene has its own file (we'll go with that first for simplicity's sake)
+	2- everything in one file
+- compression? SharpZip, we'll do that later...
+- how to write? xml? binary? json?
+- which serializer to use?
+	For now, FullSerializer
+
+- basically there will be a component (SaveObject?) to add to gameobjects to indicate that we want to save them
+	- by them I mean: any GO related property (name, tag, layer, etc) and all components attached:
+	Transforms, Colliders, Particles, Rigidbodies, ... etc and MonoBehaviours
+	- That added component will have a unique id that will be used when saving the game object so
+	there should be only 'one' save component at:tached
+	- there should also be an easy way to save a full hierarchy of objects
+
+
+TODO:
+	[done: not using order anymore]
+		\ 0- Adjust the order of saved fields (like in SavableScene for ex)
+	[done] 1- Multiple saves of a single scene with the ability to override
+		- why not have each save entry in a seperate file? that way we could benefit from pretty
+		  output without having to worry about reading a file to a certain seperator etc
+	[done] 2- Add the time the save took place
+	[done] 3- The ability to selectively choose what components to save
+		3.5- an improved version where you can further select which parts of the selected component
+		to save
+	[done: currently just using component type which means type should be unique]
+		\ 4- Find a better way of matching components within a single gameObject
+	[in progress]
+		\ 5- Write the rest of the SavableComponents (SavableCollider etc)
+		\ wrote; Transform, Rigidbody, SaveMarker, MeshFilter, MeshRenderer, Texture2D
+		\ to write: Animator, Texture
+	[done] 6- write the uniqify utility
+	[done: by type is faster] 7- see if using GetComponent(type) is faster/slower than name
+	[done] 8- compression
+	9- example
+
+optimize parsing, type serialization, reflective converter

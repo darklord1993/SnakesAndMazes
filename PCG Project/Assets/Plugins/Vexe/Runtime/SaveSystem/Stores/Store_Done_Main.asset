@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428e6e31139d86442996a24b17eb5f61, type: 3}
+  m_Name: Store_Done_Main
+  m_EditorClassIdentifier: 
+  serializationData:
+    serializedObjects: []
+    serializedStrings:
+      keys:
+      - 4669656c643a2044696374696f6e6172793c737472696e672c20556e6974794f626a6563743e205f6974656d73
+      - 4669656c643a20626f6f6c20646267
+      values:
+      - 5b5d
+      - 66616c7365
+  id: 65366663653962382d656335662d346634312d383863382d643037326433613732376336
+  dbg: 0
