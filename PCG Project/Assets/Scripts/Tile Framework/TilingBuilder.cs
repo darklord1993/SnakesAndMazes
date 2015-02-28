@@ -45,22 +45,22 @@ namespace SnakesAndMazes.TilingFramework
                     edgeConstraints.Clear();
                     if (i == 0)
                     {
-                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.S, 2);
+                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.S, 0);
                         edgeConstraints.Add(tp);
                     }
                     if (j == 0)
                     {
-                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.W, 2);
+                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.W, 0);
                         edgeConstraints.Add(tp);
                     }
                     if (i == height - 1)
                     {
-                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.N, 2);
+                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.N, 0);
                         edgeConstraints.Add(tp);
                     }
                     if (j == width - 1)
                     {
-                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.E, 2);
+                        Tuple<Direction, int> tp = new Tuple<Direction, int>(Direction.E, 0);
                         edgeConstraints.Add(tp);
                     }
                     if (i != 0)
@@ -93,7 +93,11 @@ namespace SnakesAndMazes.TilingFramework
 
 
                     if (selectedTile != null)
+                    {
+                        selectedTile.x = j;
+                        selectedTile.z = i;
                         layout[i * width + j] = selectedTile;
+                    }
                     else throw new Exception("No suitable tile found");
                 }
             }
