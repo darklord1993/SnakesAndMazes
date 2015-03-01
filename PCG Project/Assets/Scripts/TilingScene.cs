@@ -28,6 +28,13 @@ namespace SnakesAndMazes
             //tilingBuilder.seed = seed;
             Tiling tiling = (Tiling)tilingBuilder.BuildTiling();
 
+            TilingGrader grader = new TilingGrader();
+            grader.averageLoopSize = 6;
+            grader.loopCount = 10;
+            grader.loopCountRange = 5;
+
+            float grade = grader.Grade(tiling, height, width);
+
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)

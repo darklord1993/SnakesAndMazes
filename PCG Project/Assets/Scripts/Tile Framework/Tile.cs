@@ -16,8 +16,6 @@ namespace SnakesAndMazes.TilingFramework
         public int leftEdgeColor;
         public int rightEdgeColor;
         public GameObject tilePrefab;
-        public int x;
-        public int z;
 
         public int EdgeCount { get; set; }
 
@@ -36,11 +34,6 @@ namespace SnakesAndMazes.TilingFramework
             }
             
             throw new Exception("This edge direction is not supported");
-        }
-
-        internal int Position()
-        {
-            return (int)(x + z * 100f);
         }
 
         internal int EdgeColorCount(int color)

@@ -94,8 +94,6 @@ namespace SnakesAndMazes.TilingFramework
 
                     if (selectedTile != null)
                     {
-                        selectedTile.x = j;
-                        selectedTile.z = i;
                         layout[i * width + j] = selectedTile;
                     }
                     else throw new Exception("No suitable tile found");

@@ -14,17 +14,18 @@ namespace SnakesAndMazes
 
         public float Grade(Tiling tiling, int height, int width)
         {
-            List<List<Tile>> loops = new List<List<Tile>>(); 
+            List<List<int>> loops = new List<List<int>>(); 
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     Tile tile = (Tile)tiling.GetTile(y * width + x);
-                    List<Tile> smallestIncidentLoop = getSmallestLoop(tiling, tile, y, x, width);
+                    List<TileNode> smallestIncidentLoop = getSmallestLoop(tiling, tile, y, x, width);
                     if (smallestIncidentLoop == null) continue;
-                    smallestIncidentLoop.OrderBy(l => l.transform.position.x + l.transform.position.z * 10);
-                    if (!loops.Any(p => p.Equals(smallestIncidentLoop))) loops.Add(smallestIncidentLoop);
+                    List<int> loop = smallestIncidentLoop.Select(l => l.i * 100 + l.j).ToList();
+                    loop.Sort();
+                    if (!loops.Any(p => p.SequenceEqual(loop))) loops.Add(loop);
                 }
             }
 
@@ -37,105 +38,96 @@ namespace SnakesAndMazes
 
             localAverage = Math.Abs(localAverage - averageLoopSize);
 
-            return localCount + averageLoopSize;
+            return localCount + localAverage;
         }
 
-        private List<Tile> getSmallestLoop(Tiling tiling, Tile origin, int y, int x, int width)
+        private List<TileNode> getSmallestLoop(Tiling tiling, Tile origin, int y, int x, int width)
         {
             int originPathCount = 1;
 
-            List<TilePath> paths = new List<TilePath>();
-            paths.Add(new TilePath(new List<Tile> {origin}, OhioState.Tiling.Direction.NE, y, x)); //NE as indication of first tile
+            List<List<TileNode>> paths = new List<List<TileNode>>();
+            paths.Add(new List<TileNode> { new TileNode (origin, OhioState.Tiling.Direction.NE, y, x) }); //NE as indication of first tile
 
             while (true)
             {
-                TilePath path = paths[0];
+                List<TileNode> path = paths[0];
                 paths.RemoveAt(0);
                 originPathCount -= 1;
 
-                Tile endTile = path.path.Last();
-                if(path.dir != OhioState.Tiling.Direction.E && endTile.GetEdgeColor(OhioState.Tiling.Direction.W) == 1)
+                TileNode lastNode = path.Last();
+                if(lastNode.dir != OhioState.Tiling.Direction.E && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.W) == 1)
                 {
-                    Tile left = (Tile)tiling.GetTile(path.i * width + path.j - 1);
-                    if (left.Position() == origin.Position())
-                        return path.path;
-                    int leftPosition = left.Position();
-                    if (left.EdgeColorCount(1) != 1 && !path.path.Any(k => k.Position() == leftPosition))
+                    Tile left = (Tile)tiling.GetTile(lastNode.i * width + lastNode.j - 1);
+                    if (lastNode.i == y && lastNode.j - 1 == x)
+                        return path;
+                    if (left.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j - 1))
                     {
-                        List<Tile> pathCopy = new List<Tile>();
-                        for (int a = 0; a < path.path.Count; a++)
-                            pathCopy.Add(path.path[a]);
-                        pathCopy.Add(left);
-                        TilePath newPath = new TilePath(pathCopy, OhioState.Tiling.Direction.W, path.i, path.j - 1);
-
+                        List<TileNode> newPath = new List<TileNode>();
+                        for (int a = 0; a < path.Count; a++)
+                            newPath.Add(new TileNode(path[a].tile, path[a].dir, path[a].i, path[a].j));
+                        newPath.Add(new TileNode(left, OhioState.Tiling.Direction.W, lastNode.i, lastNode.j - 1));
                         paths.Add(newPath);
-
+                        originPathCount++;
                     }
                 }
-                if (path.dir != OhioState.Tiling.Direction.W && endTile.GetEdgeColor(OhioState.Tiling.Direction.E) == 1)
+                if(lastNode.dir != OhioState.Tiling.Direction.W && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.E) == 1)
                 {
-                    Tile right = (Tile)tiling.GetTile(path.i * width + path.j + 1);
-                    if (right.Position() == origin.Position())
-                        return path.path;
-                    int rightPosition = right.Position();
-                    if (right.EdgeColorCount(1) > 1 && !path.path.Any(k => k.Position() == rightPosition))
+                    Tile right = (Tile)tiling.GetTile(lastNode.i * width + lastNode.j + 1);
+                    if (lastNode.i == y && lastNode.j + 1 == x)
+                        return path;
+                    if (right.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j + 1))
                     {
-                        List<Tile> pathCopy = new List<Tile>();
-                        for(int a = 0; a < path.path.Count; a++)
-                            pathCopy.Add(path.path[a]);
-                        pathCopy.Add(right);
-                        TilePath newPath = new TilePath(pathCopy, OhioState.Tiling.Direction.E, path.i, path.j + 1);
-                       
+                        List<TileNode> newPath = new List<TileNode>();
+                        for (int a = 0; a < path.Count; a++)
+                            newPath.Add(new TileNode(path[a].tile, path[a].dir, path[a].i, path[a].j));
+                        newPath.Add(new TileNode(right, OhioState.Tiling.Direction.E, lastNode.i, lastNode.j + 1));
                         paths.Add(newPath);
-                        originPathCount += 1;
+                        originPathCount++;
                     }
                 }
-                if (path.dir != OhioState.Tiling.Direction.S && endTile.GetEdgeColor(OhioState.Tiling.Direction.N) == 1)
+                if(lastNode.dir != OhioState.Tiling.Direction.S && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.N) == 1)
                 {
-                    Tile up = (Tile)tiling.GetTile((path.i + 1)* width + path.j);
-                    if (up.Position() == origin.Position())
-                        return path.path;
-                    int upPosition = up.Position();
-                    if (up.EdgeColorCount(1) != 1 && !path.path.Any(k => k.Position() == upPosition))
+                    Tile up = (Tile)tiling.GetTile((lastNode.i + 1) * width + lastNode.j);
+                    if (lastNode.i + 1 == y && lastNode.j == x)
+                        return path;
+                    if (up.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i + 1 && n.j == lastNode.j))
                     {
-                        List<Tile> pathCopy = new List<Tile>();
-                        for (int a = 0; a < path.path.Count; a++)
-                            pathCopy.Add(path.path[a]);
-                        pathCopy.Add(up);
-                        TilePath newPath = new TilePath(pathCopy, OhioState.Tiling.Direction.S, path.i + 1, path.j);
-
+                        List<TileNode> newPath = new List<TileNode>();
+                        for (int a = 0; a < path.Count; a++)
+                            newPath.Add(new TileNode(path[a].tile, path[a].dir, path[a].i, path[a].j));
+                        newPath.Add(new TileNode(up, OhioState.Tiling.Direction.N, lastNode.i + 1, lastNode.j));
                         paths.Add(newPath);
-                        originPathCount += 1;
+                        originPathCount++;
                     }
                 }
-                if (path.dir != OhioState.Tiling.Direction.N && endTile.GetEdgeColor(OhioState.Tiling.Direction.S) == 1)
+                if(lastNode.dir != OhioState.Tiling.Direction.N && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.S) == 1)
                 {
-                    Tile down = (Tile)tiling.GetTile((path.i - 1) * width + path.j);
-                    if (down.Position() == origin.Position())
-                        return path.path;
-                    int downPosition = down.Position();
-                    if (down.EdgeColorCount(1) != 1 && !path.path.Any(k => k.Position() == downPosition))
+                    Tile up = (Tile)tiling.GetTile((lastNode.i - 1) * width + lastNode.j);
+                    if (lastNode.i - 1 == y && lastNode.j == x)
+                        return path;
+                    if (up.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i - 1 && n.j == lastNode.j))
                     {
-                        List<Tile> pathCopy = new List<Tile>();
-                        for (int a = 0; a < path.path.Count; a++)
-                            pathCopy.Add(path.path[a]);
-                        pathCopy.Add(down);
-                        TilePath newPath = new TilePath(pathCopy, OhioState.Tiling.Direction.S, path.i - 1, path.j);
-
+                        List<TileNode> newPath = new List<TileNode>();
+                        for (int a = 0; a < path.Count; a++)
+                            newPath.Add(new TileNode(path[a].tile, path[a].dir, path[a].i, path[a].j));
+                        newPath.Add(new TileNode(up, OhioState.Tiling.Direction.S, lastNode.i - 1, lastNode.j));
                         paths.Add(newPath);
-                        originPathCount += 1;
+                        originPathCount++;
                     }
                 }
 
-                if (originPathCount == 0 || originPathCount == 1) return null;
+                if (originPathCount < 2 || path.Count > 15)
+                {
+                    return null;
+                }
             }
         }
 
-        private class TilePath
+        private class TileNode
         {
-            public TilePath(List<Tile> path, OhioState.Tiling.Direction dir, int i, int j)
+            public TileNode(Tile tile, OhioState.Tiling.Direction dir, int i, int j)
             {
-                this.path = path;
+                this.tile = tile;
                 this.dir = dir;
                 this.i = i;
                 this.j = j;
@@ -143,7 +135,7 @@ namespace SnakesAndMazes
 
             public int i;
             public int j;
-            public List<Tile> path;
+            public Tile tile;
             public OhioState.Tiling.Direction dir;
         }
     }
