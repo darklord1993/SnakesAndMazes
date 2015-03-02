@@ -12,6 +12,7 @@ namespace SnakesAndMazes.TilingFramework
         private int width;
         private int height;
         private List<Tile> tiling;
+        public float grade;
 
         public Tiling(int width, int height, List<Tile> tiling)
         {

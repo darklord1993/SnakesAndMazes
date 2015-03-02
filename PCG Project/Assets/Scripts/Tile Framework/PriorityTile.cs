@@ -8,9 +8,14 @@ using Vexe.Runtime.Types;
 
 namespace SnakesAndMazes.TilingFramework
 {
-    [Serializable]
     public class PriorityTile : ITile<GameObject>
     {
+        public PriorityTile(Tile tile, int priority)
+        {
+            this.tile = tile;
+            this.priority = priority;
+        }
+
         public Tile tile;
         public int priority;
 

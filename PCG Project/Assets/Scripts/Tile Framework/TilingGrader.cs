@@ -30,6 +30,7 @@ namespace SnakesAndMazes
             }
 
             int localCount = loops.Count;
+            if (localCount == 0) localCount = 1;
             float localAverage = (float)loops.Sum(x => x.Count) / (float)localCount;
 
             localCount = Math.Abs(localCount - loopCount);

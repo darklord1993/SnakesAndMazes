@@ -16,6 +16,7 @@ namespace SnakesAndMazes.TilingFramework
         public int leftEdgeColor;
         public int rightEdgeColor;
         public GameObject tilePrefab;
+        public bool isPortal;
 
         public int EdgeCount { get; set; }
 
@@ -32,7 +33,7 @@ namespace SnakesAndMazes.TilingFramework
                 case Direction.W:
                     return leftEdgeColor;
             }
-            
+
             throw new Exception("This edge direction is not supported");
         }
 
@@ -44,6 +45,14 @@ namespace SnakesAndMazes.TilingFramework
             if (GetEdgeColor(OhioState.Tiling.Direction.E) == color) count++;
             if (GetEdgeColor(OhioState.Tiling.Direction.S) == color) count++;
             return count;
+        }
+
+        internal bool hasEdgeColor(int color)
+        {
+            return GetEdgeColor(OhioState.Tiling.Direction.N) == color ||
+                   GetEdgeColor(OhioState.Tiling.Direction.W) == color ||
+                   GetEdgeColor(OhioState.Tiling.Direction.E) == color ||
+                   GetEdgeColor(OhioState.Tiling.Direction.S) == color;
         }
     }
 }
