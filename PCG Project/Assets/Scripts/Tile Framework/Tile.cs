@@ -16,7 +16,6 @@ namespace SnakesAndMazes.TilingFramework
         public int leftEdgeColor;
         public int rightEdgeColor;
         public GameObject tilePrefab;
-        public bool isPortal;
 
         public int EdgeCount { get; set; }
 

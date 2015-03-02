@@ -10,8 +10,6 @@ namespace SnakesAndMazes.TilingFramework
 {
     public class TilingBuilder : ITilingBuilder<GameObject>
     {
-        public int seed;
-
         public int Height
         {
             get{ return height;}
@@ -37,7 +35,6 @@ namespace SnakesAndMazes.TilingFramework
             Tile[] layout = new Tile[width * height];
             List<Tuple<Direction, int>> edgeConstraints = new List<Tuple<Direction, int>>();
 
-            System.Random rng = new System.Random(seed);
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
@@ -79,7 +76,7 @@ namespace SnakesAndMazes.TilingFramework
                     TileSet truchetTileSet = (TileSet) tileSet;
                     IEnumerable<PriorityTile> matched = truchetTileSet.MatchingTiles(edgeConstraints) as IEnumerable<PriorityTile>;
                     int sum = matched.Sum(x => x.priority);
-                    int idx = rng.Next(sum);
+                    int idx = UnityEngine.Random.Range(0, sum);
                     Tile selectedTile = null;
                     foreach (PriorityTile priorityTile in matched)
                     {
