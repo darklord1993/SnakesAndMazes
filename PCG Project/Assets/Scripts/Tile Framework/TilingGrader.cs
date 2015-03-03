@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace SnakesAndMazes
 {
@@ -11,16 +12,19 @@ namespace SnakesAndMazes
         public float averageLoopSize;
         public int loopCount; //note, this ignores "super loops"
         public int loopCountRange;
+        public float percentMazeFilled;
 
         public float Grade(Tiling tiling, int height, int width)
         {
             List<List<int>> loops = new List<List<int>>(); 
+            int localFullCount = 0;
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Tile tile = (Tile)tiling.GetTile(y * width + x);
+                    PriorityTile tile = tiling.GetTile(y * width + x);
+                    if (!tile.tile.hasEdgeColor(1)) localFullCount++;
                     List<TileNode> smallestIncidentLoop = getSmallestLoop(tiling, tile, y, x, width);
                     if (smallestIncidentLoop == null) continue;
                     List<int> loop = smallestIncidentLoop.Select(l => l.i * 100 + l.j).ToList();
@@ -39,10 +43,12 @@ namespace SnakesAndMazes
 
             localAverage = Math.Abs(localAverage - averageLoopSize);
 
-            return localCount + localAverage;
+            float localFilledDifference = percentMazeFilled - ((float)localFullCount / (float)(width * height));
+
+            return localCount + localAverage + localFilledDifference;
         }
 
-        private List<TileNode> getSmallestLoop(Tiling tiling, Tile origin, int y, int x, int width)
+        private List<TileNode> getSmallestLoop(Tiling tiling, PriorityTile origin, int y, int x, int width)
         {
             int originPathCount = 1;
 
@@ -58,10 +64,10 @@ namespace SnakesAndMazes
                 TileNode lastNode = path.Last();
                 if(lastNode.dir != OhioState.Tiling.Direction.E && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.W) == 1)
                 {
-                    Tile left = (Tile)tiling.GetTile(lastNode.i * width + lastNode.j - 1);
+                    PriorityTile left = tiling.GetTile(lastNode.i * width + lastNode.j - 1);
                     if (lastNode.i == y && lastNode.j - 1 == x)
                         return path;
-                    if (left.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j - 1))
+                    if (left.tile.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j - 1))
                     {
                         List<TileNode> newPath = new List<TileNode>();
                         for (int a = 0; a < path.Count; a++)
@@ -73,10 +79,10 @@ namespace SnakesAndMazes
                 }
                 if(lastNode.dir != OhioState.Tiling.Direction.W && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.E) == 1)
                 {
-                    Tile right = (Tile)tiling.GetTile(lastNode.i * width + lastNode.j + 1);
+                    PriorityTile right = tiling.GetTile(lastNode.i * width + lastNode.j + 1);
                     if (lastNode.i == y && lastNode.j + 1 == x)
                         return path;
-                    if (right.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j + 1))
+                    if (right.tile.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i && n.j == lastNode.j + 1))
                     {
                         List<TileNode> newPath = new List<TileNode>();
                         for (int a = 0; a < path.Count; a++)
@@ -88,10 +94,10 @@ namespace SnakesAndMazes
                 }
                 if(lastNode.dir != OhioState.Tiling.Direction.S && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.N) == 1)
                 {
-                    Tile up = (Tile)tiling.GetTile((lastNode.i + 1) * width + lastNode.j);
+                    PriorityTile up = tiling.GetTile((lastNode.i + 1) * width + lastNode.j);
                     if (lastNode.i + 1 == y && lastNode.j == x)
                         return path;
-                    if (up.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i + 1 && n.j == lastNode.j))
+                    if (up.tile.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i + 1 && n.j == lastNode.j))
                     {
                         List<TileNode> newPath = new List<TileNode>();
                         for (int a = 0; a < path.Count; a++)
@@ -103,10 +109,10 @@ namespace SnakesAndMazes
                 }
                 if(lastNode.dir != OhioState.Tiling.Direction.N && lastNode.tile.GetEdgeColor(OhioState.Tiling.Direction.S) == 1)
                 {
-                    Tile up = (Tile)tiling.GetTile((lastNode.i - 1) * width + lastNode.j);
+                    PriorityTile up = tiling.GetTile((lastNode.i - 1) * width + lastNode.j);
                     if (lastNode.i - 1 == y && lastNode.j == x)
                         return path;
-                    if (up.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i - 1 && n.j == lastNode.j))
+                    if (up.tile.EdgeColorCount(1) > 1 && !path.Any(n => n.i == lastNode.i - 1 && n.j == lastNode.j))
                     {
                         List<TileNode> newPath = new List<TileNode>();
                         for (int a = 0; a < path.Count; a++)
@@ -117,7 +123,7 @@ namespace SnakesAndMazes
                     }
                 }
 
-                if (originPathCount < 2 || path.Count > 15)
+                if (originPathCount < 2 || originPathCount > 1000 || paths[0].Count > 16)
                 {
                     return null;
                 }
@@ -126,7 +132,7 @@ namespace SnakesAndMazes
 
         private class TileNode
         {
-            public TileNode(Tile tile, OhioState.Tiling.Direction dir, int i, int j)
+            public TileNode(PriorityTile tile, OhioState.Tiling.Direction dir, int i, int j)
             {
                 this.tile = tile;
                 this.dir = dir;
@@ -136,7 +142,7 @@ namespace SnakesAndMazes
 
             public int i;
             public int j;
-            public Tile tile;
+            public PriorityTile tile;
             public OhioState.Tiling.Direction dir;
         }
     }

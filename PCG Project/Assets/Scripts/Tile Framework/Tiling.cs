@@ -9,23 +9,18 @@ namespace SnakesAndMazes.TilingFramework
 {
     public class Tiling : ITiling<GameObject>
     {
-        private int width;
-        private int height;
-        private List<Tile> tiling;
+        private List<PriorityTile> tiling;
         public float grade;
 
-        public Tiling(int width, int height, List<Tile> tiling)
+        public Tiling(List<PriorityTile> tiling)
         {
-            // TODO: Complete member initialization
-            this.width = width;
-            this.height = height;
             this.tiling = tiling;
             NumberOfTiles = tiling.Count;
         }
 
         public int NumberOfTiles { get; set; }
 
-        internal Tile GetTile(int p)
+        internal PriorityTile GetTile(int p)
         {
             return tiling[p];
         }

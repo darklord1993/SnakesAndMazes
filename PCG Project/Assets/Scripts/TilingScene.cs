@@ -18,10 +18,13 @@ namespace SnakesAndMazes
         public int height;
         public float tileWidth;
         public float tileHeight;
+        public Tile fullTile;
+        public GameObject player;
 
         public float averageLoopSize;
         public int loopCount;
         public int loopCountRange;
+        public float percentFilled;
         public float threshold;
 
         private int count = 0;
@@ -48,9 +51,11 @@ namespace SnakesAndMazes
 
             prevPortals = new Portal[3];
             grader = new TilingGrader();
+
             grader.averageLoopSize = averageLoopSize;
             grader.loopCount = loopCount;
             grader.loopCountRange = loopCountRange;
+            grader.percentMazeFilled = percentFilled;
         }
 
         void Update()
@@ -65,6 +70,7 @@ namespace SnakesAndMazes
                     List<PriorityTile> tileSet = tileSets[i];
 
                     Tiling tiling = BuildTiling(tileSet);
+
                     GradeTiling(tiling);
 
                     tilings[i] = tiling;
@@ -74,7 +80,6 @@ namespace SnakesAndMazes
                 if (EvaluateGeneration(tilings, ref optimalTileSet))
                 {
                     found = true;
-                    Debug.Log("Optimal Parameters:");
                     foreach (PriorityTile tile in optimalTileSet)
                     {
                         Debug.Log(tile.tile + ":" + tile.priority);
@@ -109,6 +114,7 @@ namespace SnakesAndMazes
                         {
                             InstantiateTiling(optimalTiling);
                             optimalTileSet = tileSets[i];
+                            tiles = optimalTileSet;
                             return true;
                         }
                 }
@@ -158,6 +164,7 @@ namespace SnakesAndMazes
                     }
                 }
             }
+
             for (int l = 0; l < 2; l++)
             {
                 int pos = UnityEngine.Random.Range(0, tileSets[l].Count);
@@ -190,65 +197,35 @@ namespace SnakesAndMazes
 
         public void InstantiateTiling(Tiling tiling)
         {
-            int[] upIndex = new int[3];
-            int[] downIndex = new int[3];
-
-            if (prevPortals[0] != null)
-            {
-                int portalCount = prevPortals.Count(p => p != null);
-                for (int i = 0; i < portalCount; i++)
-                {
-                    int portalY = UnityEngine.Random.Range(0, height - 1);
-                    int portalX = UnityEngine.Random.Range(0, width - 1);
-
-                    while (upIndex.Contains(portalY * width + portalX + 1) || !((Tile)tiling.GetTile(portalY * width + portalX)).hasEdgeColor(1))
-                    {
-                        portalY = UnityEngine.Random.Range(0, height - 1);
-                        portalX = UnityEngine.Random.Range(0, width - 1);
-                    }
-                    upIndex[i] = portalY * width + portalX + 1;
-                }
-            }
-
-            int newPortalCount = UnityEngine.Random.Range(1, 3);
-            for (int i = 0; i < newPortalCount; i++)
-            {
-                int portalY = UnityEngine.Random.Range(0, height - 1);
-                int portalX = UnityEngine.Random.Range(0, width - 1);
-
-                while (upIndex.Contains(portalY * width + portalX + 1) || downIndex.Contains(portalY * width + portalX + 1) || !((Tile)tiling.GetTile(portalY * width + portalX)).hasEdgeColor(1))
-                {
-                    portalY = UnityEngine.Random.Range(0, height - 1);
-                    portalX = UnityEngine.Random.Range(0, width - 1);
-                }
-
-                downIndex[i] = portalY * width + portalX + 1;
-            }
-
             Portal[] newPortals = new Portal[3];
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Tile tile = (Tile)tiling.GetTile(y * width + x);
-                    Instantiate(tile.tilePrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity);
-                    if (downIndex.Contains(y * width + x + 1) || upIndex.Contains(y * width + x + 1))
+                    PriorityTile pTile = tiling.GetTile(y * width + x);
+                    Instantiate(pTile.tile.tilePrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity);
+                    if (pTile.portalType != PortalType.None)
                     {
-                        if (upIndex.Contains(y * width + x + 1))
+                        if (pTile.portalType == PortalType.Up)
                         {
                             var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity) as Portal;
                             portal.linkedPortal = prevPortals.First(p => p != null && p.linkedPortal == null);
                             portal.linkedPortal.linkedPortal = portal;
-                            portal.active = true;
+                            portal.activated = true;
                             portal.GetComponent<ParticleSystem>().startColor = Color.green;
                         }
                         else
                         {
                             var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity) as Portal;
-                            portal.active = false;
+                            portal.activated = false;
                             int i = 0;
                             while (i < 2 && newPortals[i] != null) i++;
                             newPortals[i] = portal;
+                            if (pTile.portalType == PortalType.Enter)
+                            { 
+                                portal.GetComponent<ParticleSystem>().startColor = Color.blue;
+                                if (player != null) player.transform.position = new Vector3(tileWidth * x, -50 * level + 1, tileHeight * y);
+                            }
                         }
                     }
                 }
@@ -263,7 +240,9 @@ namespace SnakesAndMazes
             var set = (TileSet)builder.Build();
 
             TilingBuilder tilingBuilder = new TilingBuilder(width, height, set);
-
+            tilingBuilder.FullTile = fullTile;
+            if (prevPortals[0] != null)
+                return (Tiling)tilingBuilder.BuildTiling(prevPortals);
             return (Tiling)tilingBuilder.BuildTiling();
         }
 

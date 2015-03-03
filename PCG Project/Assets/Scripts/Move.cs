@@ -9,7 +9,7 @@ namespace SnakesAndMazes
         // Use this for initialization
         void Start()
         {
-
+            tag = "Player";
         }
 
         // Update is called once per frame
@@ -17,13 +17,15 @@ namespace SnakesAndMazes
         {
 
             if (Input.GetKey(KeyCode.W))
-                transform.Translate(0, 0, .2f);
-            if (Input.GetKey(KeyCode.S))
-                transform.Translate(0, 0, -.2f);
-            if (Input.GetKey(KeyCode.A))
-                transform.Translate(-.2f, 0, 0);
-            if (Input.GetKey(KeyCode.D))
-                transform.Translate(.2f, 0, 0);
+                rigidbody.velocity = new Vector3(0, 0, 15);
+            else if (Input.GetKey(KeyCode.S))
+                rigidbody.velocity = new Vector3(0, 0, -15);
+            else if (Input.GetKey(KeyCode.A))
+                rigidbody.velocity = new Vector3(-15, 0, 0);
+            else if (Input.GetKey(KeyCode.D))
+                rigidbody.velocity = new Vector3(15, 0, 0);
+            else
+                rigidbody.velocity = new Vector3(0, 0, 0);
         }
     }
 }
