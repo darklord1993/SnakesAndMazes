@@ -43,9 +43,9 @@ namespace SnakesAndMazes
 
             localAverage = Math.Abs(localAverage - averageLoopSize);
 
-            float localFilledDifference = percentMazeFilled - ((float)localFullCount / (float)(width * height));
+            float localFilledDifference = Math.Abs(percentMazeFilled - ((float)localFullCount / (float)(width * height)));
 
-            return localCount + localAverage + localFilledDifference;
+            return localCount + localAverage * 2 + localFilledDifference * 2;
         }
 
         private List<TileNode> getSmallestLoop(Tiling tiling, PriorityTile origin, int y, int x, int width)
@@ -123,7 +123,7 @@ namespace SnakesAndMazes
                     }
                 }
 
-                if (originPathCount < 2 || originPathCount > 1000 || paths[0].Count > 16)
+                if (originPathCount < 2 || path.Count > 20)
                 {
                     return null;
                 }

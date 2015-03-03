@@ -116,26 +116,26 @@ namespace SnakesAndMazes.TilingFramework
                 int portalCount = prevPortals.Count(p => p != null);
                 for (int i = 0; i < portalCount; i++)
                 {
-                    int portalY = UnityEngine.Random.Range(0, height - 1);
-                    int portalX = UnityEngine.Random.Range(0, width - 1);
+                    int portalY = UnityEngine.Random.Range(0, height);
+                    int portalX = UnityEngine.Random.Range(0, width);
 
                     while (upIndex.Contains(portalY * width + portalX + 1) || !layout[portalY * width + portalX].hasEdgeColor(1))
                     {
-                        portalY = UnityEngine.Random.Range(0, height - 1);
-                        portalX = UnityEngine.Random.Range(0, width - 1);
+                        portalY = UnityEngine.Random.Range(0, height);
+                        portalX = UnityEngine.Random.Range(0, width);
                     }
                     upIndex[i] = portalY * width + portalX + 1;
                 }
             }
             else
             {
-                int portalY = UnityEngine.Random.Range(0, height - 1);
-                int portalX = UnityEngine.Random.Range(0, width - 1);
+                int portalY = UnityEngine.Random.Range(0, height);
+                int portalX = UnityEngine.Random.Range(0, width);
 
                 while (!layout[portalY * width + portalX].hasEdgeColor(1))
                 {
-                    portalY = UnityEngine.Random.Range(0, height - 1);
-                    portalX = UnityEngine.Random.Range(0, width - 1);
+                    portalY = UnityEngine.Random.Range(0, height);
+                    portalX = UnityEngine.Random.Range(0, width);
                 }
                 entry = portalY * width + portalX + 1;
             }
@@ -171,23 +171,23 @@ namespace SnakesAndMazes.TilingFramework
 
             int newPortalCount;
 
-            if (tiling.Count(t => t.tile != FullTile) < 5)
+            if (tiling.Count(t => t.tile != FullTile) < 3)
                 newPortalCount = 1;
             else
                 newPortalCount = UnityEngine.Random.Range(1, 3);
 
             for (int i = 0; i < newPortalCount; i++)
             {
-                int portalY = UnityEngine.Random.Range(0, height - 1);
-                int portalX = UnityEngine.Random.Range(0, width - 1);
+                List<int> indexes = tiling.Where(t => t.tile != FullTile).Select(x => tiling.IndexOf(x)).ToList();
 
-                while (upIndex.Contains(portalY * width + portalX + 1) || downIndex.Contains(portalY * width + portalX + 1) || tiling[portalY * width + portalX].portalType == PortalType.Enter || !tiling[portalY * width + portalX].tile.hasEdgeColor(1))
+                int index = indexes[UnityEngine.Random.Range(0, indexes.Count)];
+
+                while (upIndex.Contains(index + 1) || downIndex.Contains(index + 1) || tiling[index].portalType == PortalType.Enter || !tiling[index].tile.hasEdgeColor(1))
                 {
-                    portalY = UnityEngine.Random.Range(0, height - 1);
-                    portalX = UnityEngine.Random.Range(0, width - 1);
+                    index = indexes[UnityEngine.Random.Range(0, indexes.Count)];
                 }
 
-                downIndex[i] = portalY * width + portalX + 1;
+                downIndex[i] = index + 1;
             }
 
             for (int i = 0; i < 3; i++)

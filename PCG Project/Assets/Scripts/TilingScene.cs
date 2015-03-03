@@ -20,6 +20,7 @@ namespace SnakesAndMazes
         public float tileHeight;
         public Tile fullTile;
         public GameObject player;
+        public GameObject snake;
 
         public float averageLoopSize;
         public int loopCount;
@@ -60,9 +61,10 @@ namespace SnakesAndMazes
 
         void Update()
         {
+            if (Input.GetKeyUp(KeyCode.Space)) found = false;
+            if (found) return;
             if (mode == SceneMode.Generate)
             {
-                if (found) return;
                 Tiling[] tilings = new Tiling[4];
 
                 for (int i = 0; i < 4; i++)
@@ -96,6 +98,7 @@ namespace SnakesAndMazes
                     GradeTiling(tiling);
                 }
                 InstantiateTiling(tiling);
+                found = true;
 
                 level++;
             }
@@ -220,11 +223,15 @@ namespace SnakesAndMazes
                             portal.activated = false;
                             int i = 0;
                             while (i < 2 && newPortals[i] != null) i++;
-                            newPortals[i] = portal;
                             if (pTile.portalType == PortalType.Enter)
-                            { 
+                            {
                                 portal.GetComponent<ParticleSystem>().startColor = Color.blue;
                                 if (player != null) player.transform.position = new Vector3(tileWidth * x, -50 * level + 1, tileHeight * y);
+                            }
+                            else
+                            {
+                                Instantiate(snake, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity);
+                                newPortals[i] = portal;
                             }
                         }
                     }

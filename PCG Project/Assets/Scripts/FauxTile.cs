@@ -11,6 +11,7 @@ namespace SnakesAndMazes
         // Use this for initialization
         void Start()
         {
+			tag = "Untagged";
             renderer.enabled = false;
             collider.isTrigger = true;
             renderer.material.color = Color.red;
@@ -30,11 +31,13 @@ namespace SnakesAndMazes
             {
                 renderer.enabled = false;
                 collider.isTrigger = true;
+				tag = "Untagged";
             }
             else if (renderer.enabled == false)
             {
                 renderer.enabled = true;
                 collider.isTrigger = false;
+				tag = "GameController";
             }
         }
 
