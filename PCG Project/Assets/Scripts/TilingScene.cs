@@ -211,15 +211,16 @@ namespace SnakesAndMazes
                     {
                         if (pTile.portalType == PortalType.Up)
                         {
-                            var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity) as Portal;
+                            var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level + 1, tileHeight * y), Quaternion.identity) as Portal;
                             portal.linkedPortal = prevPortals.First(p => p != null && p.linkedPortal == null);
                             portal.linkedPortal.linkedPortal = portal;
+                            portal.linkedPortal.activated = true;
                             portal.activated = true;
                             portal.GetComponent<ParticleSystem>().startColor = Color.green;
                         }
                         else
                         {
-                            var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level, tileHeight * y), Quaternion.identity) as Portal;
+                            var portal = Instantiate(portalPrefab, new Vector3(tileWidth * x, -50 * level + 1, tileHeight * y), Quaternion.identity) as Portal;
                             portal.activated = false;
                             int i = 0;
                             while (i < 2 && newPortals[i] != null) i++;

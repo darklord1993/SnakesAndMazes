@@ -21,8 +21,19 @@ namespace SnakesAndMazes
         void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.tag == "Player" && activated && linkedPortal.activated)
+            {
+                linkedPortal.activated = false;
                 other.gameObject.transform.position = linkedPortal.transform.position;
-        } 
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (linkedPortal != null)
+            {
+                activated = true;
+            }
+        }
 
     }
 }
